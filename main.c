@@ -5,257 +5,188 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: aharder <aharder@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/12/22 18:05:11 by aharder           #+#    #+#             */
-/*   Updated: 2025/01/12 00:53:13 by aharder          ###   ########.fr       */
+/*   Created: 2025/01/12 20:08:56 by aharder           #+#    #+#             */
+/*   Updated: 2025/01/12 22:03:23 by aharder          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <stdio.h>
 #include <stdlib.h>
-#include "ft_printf.h"
 #include "libft.h"
+#include "ft_printf.h"
 
 typedef struct  s_stack
 {
-    int *arr;
+    int *stack;
     int top;
     int size;
 }   t_stack;
-/*
-int     check_args(char **str, int argc)
+
+int     print_error(void)
 {
-    int i;
-
-    i = 0;
-    if (argc < 2)
-        return (0);
-    if (argc == 2)
-        str = ft_split(str[1], ' ');
-    else
-        i = 1;
-    while (str[i] != '\0')
-    {
-        if (!ft_isnum(str[i]))
-        {
-            if (argc == 2)
-                free(str);
-            return (0);
-        }
-    }
-    if (argc == 2)
-        free(str);
-    return (1);
-}*/
-
+    ft_printf("Error\n");
+    return (0);
+}
 int     is_full(t_stack *stack)
 {
-    return (stack->top == stack->size - 1);
+    if (stack->top == stack->size - 1)
+        return (1);
+    return (0);
 }
-
-int     is_sorted(t_stack *stack)
+int     get_size(char **values)
 {
     int i;
+    int size;
+    char **str;
 
+    str = ft_split(values[1], ' ');
     i = 0;
-    while (i < stack->top)
+    size = 0;
+    while (str[i])
     {
-        if(stack->arr[i] > stack->arr[i + 1])
-            return (0);
+        size++;
         i++;
     }
-    return (1);
-}
-void    init_stack(t_stack *stack, int size)
-{
-    stack->arr = (int *)malloc(size * sizeof(int));
-    stack->top = -1;
-    stack->size = size;
-}
-
-void    free_stack(t_stack *stack)
-{
-    if (stack->arr != NULL)
-        free(stack->arr);
+    free(str);
+    return (size);
 }
 void    push(t_stack *src, t_stack *dest, char name)
 {
-    if (src->top == -1)
-        return;
-    dest->top++;
-    dest->arr[dest->top] = src->arr[src->top];
-    src->top--;
-    ft_printf("p%c\n", name);
+    if (src->top < 0)
+        return ;
+    if (dest->top < dest->size - 1)
+    {
+        dest->top++;
+        dest->stack[dest->top] = src->stack[src->top];
+        src->top--;
+        ft_printf("p%c\n", name);
+    }
 }
 void    rotate(t_stack *stack, char name)
 {
-    int buffer;
     int i;
+    int tmp;
 
-    i = 0;
-    buffer = stack->arr[0];
     if (stack->top < 1)
         return ;
+    i = 0;
+    tmp = stack->stack[0];
     while (i < stack->top)
     {
-        stack->arr[i] = stack->arr[i + 1];
+        stack->stack[i] = stack->stack[i + 1];
         i++;
     }
-    stack->arr[stack->top] = buffer;
+    stack->stack[stack->top] = tmp;
     ft_printf("r%c\n", name);
+}
+void    init_stack(t_stack *stack, int size)
+{
+    stack->stack = ft_calloc(size, sizeof(int));
+    stack->top = -1;
 }
 void    fill_stack(t_stack *stack, char **values, int argc)
 {
     int i;
 
     i = 1;
+    stack->size = argc;
     while (i < argc)
     {
         if(!is_full(stack))
         {
             stack->top++;
-            stack->arr[stack->top] = ft_atoi(values[i]);
+            stack->stack[stack->top] = ft_atoi(values[i]);
         }
         i++;
     }
 }
-int     get_size(char **argv)
+int    find_biggest(t_stack *stack)
 {
     int i;
-    char    **str;
+    int max;
 
     i = 0;
-    str = ft_split(argv[1], ' ');
-    while (str[i] != NULL)
-        i++;
-    free(str);
-    return (i);
-
-}
-int     get_max(t_stack *stack)
-{
-    int max;
-    int i;
-
-    i = 1;
-    max = stack->arr[0];
+    max = stack->stack[0];
     while (i <= stack->top)
     {
-        if (stack->arr[i] > max)
-            max = stack->arr[i];
+        if (stack->stack[i] > max)
+            max = stack->stack[i];
         i++;
     }
     return (max);
 }
+int    find_bits(int max)
+{
+    int i;
 
-void    sort_stack(t_stack *stack_a, t_stack *stack_b, int size)
+    i = 0;
+    while (max > 0)
+    {
+        i++;
+        max >>= 1;
+    }
+    return (i);
+}
+void	sort_stack(t_stack *stack_a, t_stack *stack_b)
 {
     int i;
     int ii;
     int max;
-    int bit_size;
+    int biggest;
 
-    bit_size = 0;
+    biggest = find_biggest(stack_a);
+    max = find_bits(biggest);
     i = 0;
-    max = get_max(stack_a);
-    while (max > 0)
-    {
-        bit_size++;
-        max >>= 1;
-    }
-    while (i <= bit_size)
+    while (i < max)
     {
         ii = 0;
-        while (ii++ < size)
+        while (ii <= biggest)
         {
-            if(((stack_a->arr[stack_a->top] >> i) & 1) == 1)
+            if(((stack_a->stack[stack_a->top] >> i) & 1) == 1)
                 rotate(stack_a, 'a');
             else
             {
                 push(stack_a, stack_b, 'b');
             }
+            ii++;
         }
         while (stack_b->top != -1)
             push(stack_b, stack_a, 'a');
         i++;
     }
 }
-void	radix_sort_stack_b(t_stack *stack_a, t_stack *stack_b, int bit_size, int j)
-{
-	while (stack_b->top-- && j <= bit_size && !is_sorted(stack_a))
-	{
-		if (((stack_b->arr[stack_b->top] >> j) & 1) == 0)
-			rotate(stack_b, 'b');
-		else
-			push(stack_b, stack_a, 'a');
-	}
-	if (is_sorted(stack_b))
-		while (stack_b->top-- > -1)
-			push(stack_b, stack_a, 'a');
-}
 
-void	radix_sort(t_stack *stack_a, t_stack *stack_b)
-{
-	int	j;
-	int	bit_size;
-	int	size;
-
-	bit_size = 0;
-	size = stack_a->size;
-	while (size > 1 && ++bit_size)
-		size /= 2;
-	j = -1;
-	while (++j <= bit_size)
-	{
-		size = stack_a->size;
-		while (size-- && !is_sorted(stack_a))
-		{
-			if (((stack_a->arr[stack_a->top] >> j) & 1) == 0)
-				push(stack_a, stack_b, 'b');
-			else
-				rotate(stack_a, 'a');
-		}
-        radix_sort_stack_b(stack_a, stack_b, bit_size, j + 1);
-	}
-	while (stack_b->top-- > -1)
-		push(stack_b, stack_a, 'a');
-}
-
-void    print_stack(t_stack *stack, int size)
+void    print_stack(t_stack *stack)
 {
     int i;
 
     i = 0;
-    while (i < size)
+    while (i <= stack->top)
     {
-        ft_printf("%d ", stack->arr[i]);
+        ft_printf("%d ", stack->stack[i]);
         i++;
     }
-    ft_printf("\n");
 }
+
 int main(int argc, char *argv[])
 {
     t_stack stack_a;
     t_stack stack_b;
-    /*if (argc == 2)
+    int size;
+    char **str;
+    if (argc == 2)
     {
         size = get_size(argv);
-        argv = ft_split(argv[1]);
+        str = ft_split(argv[1], ' ');
     }
-    if (!check_args(argc, argv))
-        return(0);*/
-    init_stack(&stack_a, argc - 1);
-    init_stack(&stack_b, argc - 1);
-    fill_stack(&stack_a, argv, argc);
-    print_stack(&stack_a, argc - 1);
-    if (is_sorted(&stack_a))
+    else
     {
-        free_stack(&stack_a);
-        free_stack(&stack_b);
-        return (0);
+        size = argc - 1;
+        str = argv;
     }
-    radix_sort(&stack_a, &stack_b);
-    print_stack(&stack_a, argc - 1);
-    free_stack(&stack_a);
-    free_stack(&stack_b);
-    return (0);
+    init_stack(&stack_a, 100);
+    init_stack(&stack_b, 100);
+    fill_stack(&stack_a, str, size);
+    sort_stack(&stack_a, &stack_b);
+    print_stack(&stack_a);
 }
