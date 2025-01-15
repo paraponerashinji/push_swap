@@ -5,111 +5,184 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: aharder <aharder@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/01/13 20:01:57 by aharder           #+#    #+#             */
-/*   Updated: 2025/01/13 20:23:44 by aharder          ###   ########.fr       */
+/*   Created: 2025/01/15 16:54:16 by aharder           #+#    #+#             */
+/*   Updated: 2025/01/15 21:07:11 by aharder          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../push_swap.h"
 
-void    sort_two(t_stack **stack_a)
+int	find_min_pos(t_stack **stack)
 {
-    if ((*stack_a)->stack > (*stack_a)->next->stack)
-        swap(stack_a, 'a');
+	t_stack	*tmp;
+	int		pos;
+	int		min_pos;
+	int		min;
+
+	tmp = *stack;
+	pos = 0;
+	min_pos = 0;
+	min = tmp->index;
+	while (tmp)
+	{
+		if (tmp->index < min)
+		{
+			min = tmp->index;
+			min_pos = pos;
+		}
+		tmp = tmp->next;
+		pos++;
+	}
+	return (min_pos);
 }
 
-void    sort_three(t_stack **stack_a)
+void	sort_two(t_stack **stack)
 {
-    if ((*stack_a)->stack > (*stack_a)->next->stack && 
-        (*stack_a)->next->stack > (*stack_a)->next->next->stack)
-    {
-        swap(stack_a, 'a');
-        rrotate(stack_a, 'a');
-    }
-    else if ((*stack_a)->stack > (*stack_a)->next->stack)
-        swap(stack_a, 'a');
-    else if ((*stack_a)->next->stack > (*stack_a)->next->next->stack)
-        rrotate(stack_a, 'a');
-    if ((*stack_a)->stack > (*stack_a)->next->stack)
-        swap(stack_a, 'a');
+	if ((*stack)->index > (*stack)->next->index)
+		swap(stack, 'a');
 }
 
-void    sort_small(t_stack **stack_a, t_stack **stack_b)
+void	sort_three(t_stack **stack)
 {
-    int size;
+	int	first;
+	int	second;
+	int	third;
 
-    size = stack_size(stack_a);
-    if (size == 2)
-        sort_two(stack_a);
-    else if (size == 3)
-        sort_three(stack_a);
-    else
-        sort_more_than_three(stack_a, stack_b);
-}
-void    sort_more_than_three(t_stack **stack_a, t_stack **stack_b)
-{
-    int min;
-    int min_pos;
-    t_stack *tmp;
-
-    while (stack_size(stack_a) > 3)
-    {
-        min_pos = 0;
-        min = (*stack_a)->index;
-        tmp = *stack_a;
-        while (tmp)
-        {
-            if (tmp->index < min)
-            {
-                min = tmp->index;
-                min_pos++;
-            }
-            tmp = tmp->next;
-        }
-        if (min_pos <= stack_size(stack_a) / 2)
-            while ((*stack_a)->index != min)
-                rotate(stack_a, 'a');
-        else
-            while ((*stack_a)->index != min)
-                rrotate(stack_a, 'a');
-        push(stack_a, stack_b, 'b');
-    }
-    sort_three(stack_a);
-    while (*stack_b)
-        push(stack_b, stack_a, 'a');
+	first = (*stack)->index;
+	second = (*stack)->next->index;
+	third = (*stack)->next->next->index;
+	if (first > second && second < third && third > first)
+		swap(stack, 'a');
+	else if (first > second && second > third)
+	{
+		swap(stack, 'a');
+		rrotate(stack, 'a');
+	}
+	else if (first > second && second < third && third < first)
+		rotate(stack, 'a');
+	else if (first < second && second > third && third > first)
+	{
+		swap(stack, 'a');
+		rotate(stack, 'a');
+	}
+	else if (first < second && second > third && third < first)
+		rrotate(stack, 'a');
 }
 
-void    sort_stacks(t_stack **stack_a, t_stack **stack_b)
+void	sort_four(t_stack **stack_a, t_stack **stack_b)
 {
-        int     i;
-        int     size;
-        int     max_num;
-        int     pos;
-        t_stack *tmp;
+	int	min_pos;
 
-        size = stack_size(stack_a);
-        max_num = 0;
-        tmp = *stack_a;
-        while (tmp)
-        {
-            if (tmp->index > max_num)
-                max_num = tmp->index;
-            tmp = tmp->next;
-        }
-        pos = 0;
-        while ((max_num >> pos) > 0)
-        {
-            i = 0;
-            while (i < size)
-            {
-                if (((*stack_a)->index >> pos) & 1)
-                    rotate(stack_a, 'a');
-                else
-                    push(stack_a, stack_b, 'b');
-                i++;
-            }
-            while (*stack_b)
-                push(stack_b, stack_a, 'a');
-            pos++;
-        }
+	min_pos = find_min_pos(stack_a);
+	if (min_pos == 1)
+		rotate(stack_a, 'a');
+	else if (min_pos == 2)
+	{
+		rotate(stack_a, 'a');
+		rotate(stack_a, 'a');
+	}
+	else if (min_pos == 3)
+		rrotate(stack_a, 'a');
+	push(stack_a, stack_b, 'b');
+	sort_three(stack_a);
+	push(stack_b, stack_a, 'a');
+}
+
+void	sort_five(t_stack **stack_a, t_stack **stack_b)
+{
+	int	min_pos;
+
+	min_pos = find_min_pos(stack_a);
+	if (min_pos == 1)
+		rotate(stack_a, 'a');
+	else if (min_pos == 2)
+	{
+		rotate(stack_a, 'a');
+		rotate(stack_a, 'a');
+	}
+	else if (min_pos == 3)
+	{
+		rrotate(stack_a, 'a');
+		rrotate(stack_a, 'a');
+	}
+	else if (min_pos == 4)
+		rrotate(stack_a, 'a');
+	push(stack_a, stack_b, 'b');
+	sort_four(stack_a, stack_b);
+	push(stack_b, stack_a, 'a');
+}
+
+void	sort_small(t_stack **stack_a, t_stack **stack_b)
+{
+	int	size;
+
+	size = stack_size(stack_a);
+	if (size == 2)
+		sort_two(stack_a);
+	else if (size == 3)
+		sort_three(stack_a);
+	else if (size == 4)
+		sort_four(stack_a, stack_b);
+	else if (size == 5)
+		sort_five(stack_a, stack_b);
+}
+
+void	radix_sort_stack_b(t_stack **stack_a, t_stack **stack_b,
+		int bit_pos, int bit_max)
+{
+	int	size_b;
+
+	size_b = stack_size(stack_b);
+	while (size_b-- && bit_pos <= bit_max && !is_sorted(stack_a))
+	{
+		if ((((*stack_b)->index >> bit_pos) & 1) == 0)
+			rotate(stack_b, 'b');
+		else
+			push(stack_b, stack_a, 'a');
+	}
+	if (is_sorted(stack_a))
+	{
+		while (*stack_b)
+			push(stack_b, stack_a, 'a');
+	}
+}
+
+int	get_bit_size(int size)
+{
+	int	bit_size;
+
+	bit_size = 0;
+	while (size > 1)
+	{
+		size /= 2;
+		bit_size++;
+	}
+	return (bit_size);
+}
+
+void	sort_stacks(t_stack **stack_a, t_stack **stack_b)
+{
+	int	bit_pos;
+	int	bit_max;
+	int	size;
+	int	current_size;
+
+	size = stack_size(stack_a);
+	bit_max = get_bit_size(size);
+	bit_pos = 0;
+	while (bit_pos <= bit_max)
+	{
+		current_size = stack_size(stack_a);
+		while (current_size-- && !is_sorted(stack_a))
+		{
+			if ((((*stack_a)->index >> bit_pos) & 1) == 0)
+				push(stack_a, stack_b, 'b');
+			else
+				rotate(stack_a, 'a');
+		}
+		radix_sort_stack_b(stack_a, stack_b, bit_pos + 1, bit_max);
+		bit_pos++;
+	}
+	while (*stack_b)
+		push(stack_b, stack_a, 'a');
 }

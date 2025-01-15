@@ -12,62 +12,62 @@
 
 #include "../push_swap.h"
 
-void    push(t_stack **src, t_stack **dest, char name)
+void	push(t_stack **src, t_stack **dest, char name)
 {
-    t_stack *tmp;
+	t_stack	*tmp;
 
-    if (!src || !*src)
-        return;
-    tmp = *src;
-    *src = (*src)->next;
-    tmp->next = *dest;
-    *dest = tmp;
-    ft_printf("p%c\n", name);
+	if (!src || !*src)
+		return ();
+	tmp = *src;
+	*src = (*src)->next;
+	tmp->next = *dest;
+	*dest = tmp;
+	ft_printf("p%c\n", name);
 }
 
-void    swap(t_stack **stack, char name)
+void	swap(t_stack **stack, char name)
 {
-    t_stack *tmp;
+	t_stack	*tmp;
 
-    if (!(*stack) || !(*stack)->next)
-        return;
-    tmp = *stack;
-    *stack = (*stack)->next;
-    tmp->next = (*stack)->next;
-    (*stack)->next = tmp;
-    ft_printf("s%c\n", name);
+	if (!(*stack) || !(*stack)->next)
+		return ();
+	tmp = *stack;
+	*stack = (*stack)->next;
+	tmp->next = (*stack)->next;
+	(*stack)->next = tmp;
+	ft_printf("s%c\n", name);
 }
 
-void    rotate(t_stack **stack, char name)
+void	rotate(t_stack **stack, char name)
 {
-    t_stack *tmp;
-    t_stack *last;
+	t_stack	*tmp;
+	t_stack	*last;
 
-    if (!(*stack) || !(*stack)->next)
-        return;
-    tmp = *stack;
-    last = *stack;
-    *stack = (*stack)->next;
-    while (last->next)
-        last = last->next;
-    last->next = tmp;
-    tmp->next = NULL;
-    ft_printf("r%c\n", name);
+	if (!(*stack) || !(*stack)->next)
+		return ();
+	tmp = *stack;
+	last = *stack;
+	*stack = (*stack)->next;
+	while (last->next)
+		last = last->next;
+	last->next = tmp;
+	tmp->next = NULL;
+	ft_printf("r%c\n", name);
 }
 
-void    rrotate(t_stack **stack, char name)
+void	rrotate(t_stack **stack, char name)
 {
-    t_stack *tmp;
-    t_stack *last;
+	t_stack	*tmp;
+	t_stack	*last;
 
-    if (!(*stack) || !(*stack)->next)
-        return;
-    last = *stack;
-    while (last->next->next)
-        last = last->next;
-    tmp = last->next;
-    last->next = NULL;
-    tmp->next = *stack;
-    *stack = tmp;
-    ft_printf("rr%c\n", name);
+	if (!(*stack) || !(*stack)->next)
+		return ();
+	last = *stack;
+	while (last->next->next)
+		last = last->next;
+	tmp = last->next;
+	last->next = NULL;
+	tmp->next = *stack;
+	*stack = tmp;
+	ft_printf("rr%c\n", name);
 }
