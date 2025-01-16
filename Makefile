@@ -1,7 +1,7 @@
 NAME= push_swap
 CC= cc
 CFLAGS = -Wall -Wextra -Werror -g
-SRCS= main.c src/check_args.c src/init_stack.c src/moves.c src/sorting.c src/utilities.c
+SRCS= main.c src/check_args.c src/init_stack.c src/moves.c src/sorting.c src/utilities.c src/small_sort.c
 OBJS= $(SRCS:.c=.o)
 LIBS=  libftprintf.a libft.a
 $(NAME): $(OBJS)

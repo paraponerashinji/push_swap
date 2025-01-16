@@ -24,7 +24,7 @@ typedef struct s_stack
 
 int		print_error(void);
 // Check_args
-int		has_duplicate(int num, char **argv, int pos, int argc);
+int		has_duplicate(int num, char **args, int pos);
 int		check_args(int argc, char *argv[]);
 
 // Moves

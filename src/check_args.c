@@ -12,39 +12,93 @@
 
 #include "../push_swap.h"
 
-int	has_duplicate(int num, char **argv, int pos, int argc)
+int	has_duplicate(int num, char **args, int pos)
 {
 	int	i;
 
 	i = 1;
-	while (i < argc)
+	while (args[i])
 	{
-		if (i != pos && ft_atoi(argv[i]) == num)
+		if (i != pos && ft_atoi(args[i]) == num)
 			return (1);
 		i++;
 	}
 	return (0);
 }
 
+int	is_too_big(const char *str)
+{
+	unsigned int	output;
+	int				posneg;
+
+	output = 0;
+	posneg = 1;
+	if (*str == '-')
+		posneg = posneg * -1;
+	if (*str == '-' || *str == '+')
+		str++;
+	while (*str >= '0' && *str <= '9')
+	{
+		output = output * 10 + *str - '0';
+		str++;
+	}
+	if (posneg == 1)
+	{
+		if (output > 2147483647)
+			return (1);
+	}
+	else
+	{
+		if (output > 2147483648)
+			return (1);
+	}
+	return (0);
+}
+
+int	is_valid(int i, char **args)
+{
+	int	num;
+	int	j;
+
+	j = 0;
+	while (args[i][j] != '\0')
+	{
+		if (j == 0 && args[i][j] == '-' && args[i][j + 1] != '\0')
+			j++;
+		else if (!ft_isdigit(args[i][j]))
+		{
+			return (print_error());
+		}
+		else
+			j++;
+	}
+	num = ft_atoi(args[i]);
+	if (has_duplicate(num, args, i) || is_too_big(args[i]))
+		return (print_error());
+	return (1);
+}
+
 int	check_args(int argc, char *argv[])
 {
-	int	i;
-	int	j;
-	int	num;
+	int		i;
+	char	**args;
 
-	i = 1;
-	while (i < argc)
+	i = 0;
+	if (argc == 2)
 	{
-		j = 0;
-		while (argv[i][j])
-		{
-			if (!ft_isdigit(argv[i][j]) && argv[i][j] != '-')
-				return (print_error());
-			j++;
-		}
-		num = ft_atoi(argv[i]);
-		if (has_duplicate(num, argv, i, argc))
+		args = ft_split(argv[1], ' ');
+		if (args[0] == NULL)
 			return (print_error());
+	}
+	else
+	{
+		args = argv;
+		i = 1;
+	}
+	while (args[i])
+	{
+		if (!is_valid(i, args))
+			return (0);
 		i++;
 	}
 	return (1);
