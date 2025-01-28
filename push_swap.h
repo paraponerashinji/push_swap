@@ -16,9 +16,9 @@
 
 typedef struct s_stack
 {
-	int				stack;
-	unsigned int				index;
-	struct s_stack	*next;
+	int					stack;
+	unsigned int		index;
+	struct s_stack		*next;
 }	t_stack;
 
 int		print_error(void);

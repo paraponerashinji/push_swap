@@ -20,9 +20,9 @@ void	init_stacks(t_stack **a, t_stack **b)
 
 void	assign_indices(t_stack **a)
 {
-	t_stack	*current;
-	t_stack	*compare;
-	unsigned int		index;
+	t_stack			*current;
+	t_stack			*compare;
+	unsigned int	index;
 
 	current = *a;
 	while (current)
