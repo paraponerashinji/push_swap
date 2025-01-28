@@ -17,7 +17,7 @@ int	find_min_pos(t_stack **stack)
 	t_stack	*tmp;
 	int		pos;
 	int		min_pos;
-	int		min;
+	unsigned int		min;
 
 	tmp = *stack;
 	pos = 0;

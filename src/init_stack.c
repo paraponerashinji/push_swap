@@ -22,7 +22,7 @@ void	assign_indices(t_stack **a)
 {
 	t_stack	*current;
 	t_stack	*compare;
-	int		index;
+	unsigned int		index;
 
 	current = *a;
 	while (current)
