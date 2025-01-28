@@ -13,7 +13,6 @@
 SRCS = ft_memset.c		\
 		ft_bzero.c		\
 		ft_memcpy.c		\
-		ft_memccpy.c		\
 		ft_memmove.c 	\
 		ft_memchr.c		\
 		ft_memcmp.c		\
@@ -49,9 +48,6 @@ SRCS = ft_memset.c		\
 		printers.c \
 		moreprinters.c \
 		utilities.c
-		
-SRCSB = ft_lstsize.c \
-		$(SRCS)
 
 NAME = libft.a
 
@@ -60,7 +56,6 @@ OBJS = $(SRCS:.c=.o)
 OBJECTS_PREFIXED = $(addprefix $(OBJS_DIR), $(OBJS))
 
 OBJSB = $(SRCSB:.c=.o)
-OBJECTS_BONUS_PREFIXED = $(addprefix $(OBJS_DIR), $(OBJSB))
 
 CC = cc
 
@@ -84,8 +79,4 @@ fclean: clean
 	rm -f $(NAME)
 
 re: fclean all
-
-bonus: $(OBJECTS_BONUS_PREFIXED)
-	@ar r $(NAME) $(OBJECTS_BONUS_PREFIXED)
-	@echo "Libft Bonus Done !"
 
