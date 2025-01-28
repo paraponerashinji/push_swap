@@ -13,7 +13,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "libft.h"
-#include "ft_printf.h"
 
 typedef struct s_stack
 {

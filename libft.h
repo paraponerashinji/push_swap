@@ -3,18 +3,25 @@
 /*                                                        :::      ::::::::   */
 /*   libft.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aharder <marvin@42.fr>                     +#+  +:+       +#+        */
+/*   By: rchallie <rchallie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/10/24 12:52:07 by aharder           #+#    #+#             */
-/*   Updated: 2024/10/24 13:05:44 by aharder          ###   ########.fr       */
+/*   Created: 2019/10/07 11:03:52 by rchallie          #+#    #+#             */
+/*   Updated: 2019/10/21 16:09:56 by rchallie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#define LIBFT_HEADER_H
+#ifndef LIBFT_H
+# define LIBFT_H
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <unistd.h>
+# include <unistd.h>
+# include <stdlib.h>
+# include <stdarg.h>
+
+typedef struct s_list
+{
+	void			*content;
+	struct s_list	*next;
+}	t_list;
 
 typedef struct s_var_bordel
 {
@@ -33,7 +40,7 @@ int			ft_isascii(int c);
 int			ft_isdigit(char c);
 void		*ft_bzero(void *ptr, int size);
 void		*ft_calloc(unsigned long elementCount, unsigned long elementSize);
-char		*ft_itoa(int nb, int base);
+char		*ft_itoa(int nb);
 void		*ft_memchr(void *source, int searchedChar, int size);
 int			ft_memcmp(void *ptr1, void *ptr2, int size);
 void		*ft_memcpy(void *dest, const void *source, int size);
@@ -59,3 +66,21 @@ char		ft_tolower(char str);
 char		ft_toupper(char str);
 char		*ft_strmapi(char const *s, char (*f)(unsigned int, char));
 void		ft_striteri(char *s, void (*f)(unsigned int, char*));
+
+/*
+	printf
+*/
+
+int			ft_printf(const char *str, ...);
+int			gettype(char c, va_list args);
+int			getargcount(const char *str);
+int			findlengthhex(unsigned long int n);
+int			findlength(unsigned int n);
+int			ft_putchar(char c);
+int			ft_putnbr(int n);
+int			ft_putstr(char *str);
+int			ft_puthexupper(unsigned int n);
+int			ft_puthexlower(unsigned int n);
+int			ft_putunsignednbr(unsigned int n);
+int			ft_putptr(unsigned long int n);
+#endif
