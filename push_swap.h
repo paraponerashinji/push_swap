@@ -51,4 +51,5 @@ void	sort_stacks(t_stack **stack_a, t_stack **stack_b);
 int		is_sorted(t_stack **stack);
 void	free_stacks(t_stack **a, t_stack **b);
 int		print_error(void);
+int		free_split(char **split);
 int		main(int argc, char *argv[]);

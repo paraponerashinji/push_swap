@@ -98,8 +98,9 @@ int	check_args(int argc, char *argv[])
 	while (args[i])
 	{
 		if (!is_valid(i, args))
-			return (0);
+			return (free_split(args));
 		i++;
 	}
+	free_split(args);
 	return (1);
 }
